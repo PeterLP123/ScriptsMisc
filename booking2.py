@@ -1,5 +1,4 @@
 import logging
-import re
 import time
 import pause
 from datetime import datetime
@@ -16,29 +15,16 @@ driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install())
 
 driver.get('https://www.maynoothuniversity.ie/student-residences/bookings')
 logging.info('Chromedriver opened successfully')
+
 # Maximise the window
 driver.maximize_window()
+
 # Click on the button which reads "Allow all cookies"
 allow_cookies = driver.find_element(By.ID, "CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll")
 allow_cookies.click()
 time.sleep(1)
 
-pattern = re.compile(r"^.*[Bb][Oo][Oo][Kk][^SsEe]*$")
+booking_link = driver.find_element(By.LINK_TEXT, "^.*[Ll][Ii][Nn][Kk][^Ss]*$")
+booking_link.click()
+logging.info('Clicked on Book Now')
 
-# Wait until the booking time
-pause.until(datetime(2023, 3, 27, 21, 53, 0))
-logging.info('Booking time reached')
-found = False
-while not found:
-    driver.refresh()
-    # Find the button which reads "Book Now"
-    elements = driver.find_elements(By.TAG_NAME, "a")
-    for element in elements:
-        if pattern.match(element.text):
-            element.click()
-            logging.info('Clicked on Book Now')
-            found = True
-            break
-    continue
-
-driver.stop_client()
