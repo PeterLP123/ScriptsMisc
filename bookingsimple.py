@@ -9,15 +9,10 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.action_chains import ActionChains
 
 chrome_options = Options()
 chrome_options.add_experimental_option("detach", True)
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
-action = ActionChains(driver)
-
-action.move_to_element_with_offset(driver.find_element_by_tag_name('body'), 0, 0).click().perform()
-
 
 driver.get('https://www.maynoothuniversity.ie/student-residences/bookings')
 logging.info('Chromedriver opened successfully')
@@ -27,23 +22,12 @@ driver.maximize_window()
 allow_cookies = driver.find_element(By.ID, "CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll")
 allow_cookies.click()
 time.sleep(1)
+current_url = driver.current_url
+print(current_url)
 
-pattern = re.compile(r"^.*[Ll][Ii][Nn][Kk][^SsEe]*$")
-
-# Wait until the booking time
-pause.until(datetime(2023, 3, 27, 21, 53, 0))
-logging.info('Booking time reached')
-found = False
-while not found:
+while current_url == "https://www.maynoothuniversity.ie/student-residences/bookings":
     driver.refresh()
-    # Find the button which reads "Book Now"
-    elements = driver.find_elements(By.TAG_NAME, "a")
-    for element in elements:
-        if pattern.match(element.text):
-            element.click()
-            logging.info('Clicked on Book Now')
-            found = True
-            break
-    continue
+    current_url = driver.current_url
+
 
 driver.stop_client()
