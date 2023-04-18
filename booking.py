@@ -14,9 +14,6 @@ from selenium.webdriver.common.action_chains import ActionChains
 chrome_options = Options()
 chrome_options.add_experimental_option("detach", True)
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
-action = ActionChains(driver)
-
-action.move_to_element_with_offset(driver.find_element_by_tag_name('body'), 0, 0).click().perform()
 
 
 driver.get('https://www.maynoothuniversity.ie/student-residences/bookings')

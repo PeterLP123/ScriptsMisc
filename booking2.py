@@ -22,16 +22,18 @@ driver.maximize_window()
 allow_cookies = driver.find_element(By.ID, "CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll")
 allow_cookies.click()
 time.sleep(1)
-
-while True:
+current_url = driver.current_url
+while current_url == "https://www.maynoothuniversity.ie/student-residences/bookings":
+    pause.until(datetime(2023, 4, 18, 21, 20, 0, 5))
     driver.refresh()
     # Find the button which reads "Book Now"
     try:
-        element = driver.find_element(By.PARTIAL_LINK_TEXT, "LINK")
+        element = driver.find_element(By.PARTIAL_LINK_TEXT, "click")
         element.click()
         logging.info('Clicked on Booking Link')
         break
     except NoSuchElementException:
+        current_url = driver.current_url
         continue
 
 driver.stop_client()
